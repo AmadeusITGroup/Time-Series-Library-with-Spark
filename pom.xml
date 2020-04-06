@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.amadeus.tso</groupId>
+	<artifactId>time-series-library</artifactId>
+	<version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <scala.lang.version>2.11.8</scala.lang.version>
+        <scala.binary.version>2.11</scala.binary.version>
+        <scala.lang.scope>compile</scala.lang.scope>
+
+        <!-- Logging -->
+        <scala.logging.version>[2.1.2]</scala.logging.version>
+        <scala.logging.scope>compile</scala.logging.scope>
+
+        <!-- Config -->
+        <config.version>[1.3.1]</config.version>
+        <config.scope>compile</config.scope>
+
+        <!-- Scalamock depends on scalatest-->
+        <scalamock.version>3.2</scalamock.version>
+        <scalamock.scope>test</scalamock.scope>
+    </properties>
+
+    <profiles>
+        <profile>
+            <id>spark_2.1</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+                <property>
+                    <name>!spark_2.3</name>
+                </property>
+            </activation>
+
+            <properties>
+                <!-- Spark -->
+                <library.classifier>scala211-spark21</library.classifier>
+                <spark.jar.suffix>2.1</spark.jar.suffix>
+                <spark.core.version>[2.1.0]</spark.core.version>
+                <spark.core.scope>provided</spark.core.scope>
+                <spark.streaming.version>[2.1.0]</spark.streaming.version>
+                <spark.streaming.scope>provided</spark.streaming.scope>
+                <spark.sql.version>[2.1.0]</spark.sql.version>
+                <spark.sql.scope>provided</spark.sql.scope>
+            </properties>
+        </profile>
+        <profile>
+            <id>spark_2.3</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+                <property>
+                    <name>spark_2.3</name>
+                </property>
+            </activation>
+
+            <properties>
+                <library.classifier>scala211-spark23</library.classifier>
+                <spark.jar.suffix>2.3</spark.jar.suffix>
+                <spark.core.version>[2.3.1]</spark.core.version>
+                <spark.core.scope>provided</spark.core.scope>
+                <spark.streaming.version>[2.3.1]</spark.streaming.version>
+                <spark.streaming.scope>provided</spark.streaming.scope>
+                <spark.sql.version>[2.3.1]</spark.sql.version>
+                <spark.sql.scope>provided</spark.sql.scope>
+            </properties>
+        </profile>
+    </profiles>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>${scala.lang.version}</version>
+            <scope>${scala.lang.scope}</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-core_${scala.binary.version}</artifactId>
+            <version>${spark.core.version}</version>
+            <scope>${spark.core.scope}</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-sql_${scala.binary.version}</artifactId>
+            <version>${spark.sql.version}</version>
+            <scope>${spark.sql.scope}</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.typesafe.scala-logging</groupId>
+            <artifactId>scala-logging-slf4j_${scala.binary.version}</artifactId>
+            <version>${scala.logging.version}</version>
+            <scope>${scala.logging.scope}</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.typesafe</groupId>
+            <artifactId>config</artifactId>
+            <version>${config.version}</version>
+            <scope>${config.scope}</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.scalamock</groupId>
+            <artifactId>scalamock-scalatest-support_${scala.binary.version}</artifactId>
+            <version>${scalamock.version}</version>
+            <scope>${scalamock.scope}</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.spray</groupId>
+            <artifactId>spray-json_${scala.binary.version}</artifactId>
+            <version>1.3.4</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.5.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <classifier>${library.classifier}</classifier>
+                </configuration>
+            </plugin>
+            <!-- enable scalatest -->
+            <plugin>
+                <groupId>org.scalatest</groupId>
+                <artifactId>scalatest-maven-plugin</artifactId>
+                <version>1.0</version>
+                <configuration>
+                    <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
+                    <junitxml>.</junitxml>
+                    <filereports>WDF TestSuite.txt</filereports>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>test</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Enabling scala -->
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <version>3.2.1</version>
+                <executions>
+                    <execution>
+                        <id>scala-add-source</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>scala-compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <args>
+                                <arg>-deprecation</arg>
+                                <arg>-feature</arg>
+                            </args>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>scala-test-compile</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                        <configuration>
+                            <args>
+                                <arg>-deprecation</arg>
+                                <arg>-feature</arg>
+                            </args>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>Scaladoc</id>
+                        <goals>
+                            <goal>doc-jar</goal>
+                        </goals>
+                        <phase>prepare-package</phase>
+                        <configuration>
+                            <args>
+                                <arg>-no-link-warnings</arg>
+                            </args>
+
+                            <classifier>${library.classifier}-javadoc</classifier>
+
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>make-lib-targz</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptorRefs>
+                                <descriptorRef>bin</descriptorRef>
+                            </descriptorRefs>
+                            <appendAssemblyId>false</appendAssemblyId>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

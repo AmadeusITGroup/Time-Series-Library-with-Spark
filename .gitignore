@@ -1,0 +1,6 @@
+.idea/*
+metadata.xml
+metastore_db
+target*
+*.iml
+derby.log

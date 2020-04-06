@@ -1,0 +1,4 @@
+{"window":{"start":"2019-12-20T10:00:00.000Z","end":"2019-12-20T11:00:00.000Z"},"office":"NCE1A0123","userId":"U01","attemptCount":4,"uniqueContainerCount":3,"containers":["CID002","CID001","CID003"],"actions":["B","A"]}
+{"window":{"start":"2019-12-20T10:00:00.000Z","end":"2019-12-20T11:00:00.000Z"},"office":"NCE1A0123","userId":"U02","attemptCount":1,"uniqueContainerCount":1,"containers":["CID001"],"actions":["A"]}
+{"window":{"start":"2019-12-20T14:00:00.000Z","end":"2019-12-20T15:00:00.000Z"},"office":"NCE1A0123","userId":"U01","attemptCount":1,"uniqueContainerCount":1,"containers":["CID002"],"actions":["B"]}
+{"window":{"start":"2019-12-20T14:00:00.000Z","end":"2019-12-20T15:00:00.000Z"},"office":"NCE1A0123","userId":"U02","attemptCount":2,"uniqueContainerCount":2,"containers":["CID002","CID004"],"actions":["B"]}

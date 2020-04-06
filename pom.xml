@@ -140,6 +140,7 @@
                     <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
                     <junitxml>.</junitxml>
                     <filereports>WDF TestSuite.txt</filereports>
+                    <argLine>-Duser.timezone=UTC</argLine>
                 </configuration>
                 <executions>
                     <execution>
